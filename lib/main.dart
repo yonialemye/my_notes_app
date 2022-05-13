@@ -10,6 +10,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
     MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -54,6 +55,8 @@ class HomePage extends StatelessWidget {
   }
 }
 
+enum MenuAction { logout }
+
 class NotesView extends StatefulWidget {
   const NotesView({Key? key}) : super(key: key);
 
@@ -67,6 +70,24 @@ class _NotesViewState extends State<NotesView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Main UI'),
+        actions: [
+          PopupMenuButton<MenuAction>(
+            onSelected: (value) {
+              print(value);
+            },
+            itemBuilder: (context) {
+              return const [
+                PopupMenuItem(
+                  value: MenuAction.logout,
+                  child: Text('Logout'),
+                ),
+              ];
+            },
+          ),
+        ],
+      ),
+      body: const Center(
+        child: Text('Hello main ui'),
       ),
     );
   }
