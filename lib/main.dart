@@ -1,3 +1,5 @@
+import 'dart:developer' as dev show log;
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -73,7 +75,7 @@ class _NotesViewState extends State<NotesView> {
         actions: [
           PopupMenuButton<MenuAction>(
             onSelected: (value) {
-              print(value);
+              dev.log(value.toString());
             },
             itemBuilder: (context) {
               return const [
