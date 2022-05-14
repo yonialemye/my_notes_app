@@ -54,13 +54,12 @@ class _LoginViewState extends State<LoginView> {
             onPressed: () async {
               final email = this.email.text;
               final password = this.password.text;
-
               try {
-                final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+                await FirebaseAuth.instance.signInWithEmailAndPassword(
                   email: email,
                   password: password,
                 );
-                print(FirebaseAuth.instance.currentUser);
+                Navigator.of(context).pushNamedAndRemoveUntil('/notes/', (route) => false);
               } on FirebaseAuthException catch (e) {
                 if (e.code == 'user-not-found') {
                   print('user not found!');

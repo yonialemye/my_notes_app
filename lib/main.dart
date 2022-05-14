@@ -22,6 +22,7 @@ void main() {
         '/homepage/': (context) => const HomePage(),
         '/login/': (context) => const LoginView(),
         '/register/': (context) => const RegisterView(),
+        '/notes/': (context) => const NotesView(),
       },
     ),
   );
