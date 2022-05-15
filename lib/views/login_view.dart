@@ -1,6 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:my_notes_app/constants/routes.dart';
+import 'package:my_notes_app/services/auth/auth_exceptions.dart';
+import 'package:my_notes_app/services/auth/auth_services.dart';
 import 'package:my_notes_app/utilities/show_error_dialog.dart';
 
 class LoginView extends StatefulWidget {
@@ -57,26 +58,22 @@ class _LoginViewState extends State<LoginView> {
               final email = this.email.text;
               final password = this.password.text;
               try {
-                await FirebaseAuth.instance.signInWithEmailAndPassword(
+                await AuthServices.firebase().login(
                   email: email,
                   password: password,
                 );
-                final user = FirebaseAuth.instance.currentUser;
-                if (user?.emailVerified ?? false) {
+                final user = AuthServices.firebase().currentUser;
+                if (user?.isEmailVerified ?? false) {
                   Navigator.of(context).pushNamedAndRemoveUntil(notesRoute, (route) => false);
                 } else {
                   Navigator.of(context).pushNamed(verifyRoute);
                 }
-              } on FirebaseAuthException catch (e) {
-                if (e.code == 'user-not-found') {
-                  await showErrorDialog(context, 'User not found!');
-                } else if (e.code == 'wrong-password') {
-                  await showErrorDialog(context, 'wrong password detected!');
-                } else {
-                  await showErrorDialog(context, 'ErrorCode: ${e.code}');
-                }
-              } catch (e) {
-                await showErrorDialog(context, e.toString());
+              } on UserNotFoundAuthException {
+                await showErrorDialog(context, 'User not found!');
+              } on WrongPasswordAuthException {
+                await showErrorDialog(context, 'wrong password detected!');
+              } on GenericAuthException {
+                await showErrorDialog(context, 'ErrorCode: Authentication Error');
               }
             },
             child: const Text('Login'),
